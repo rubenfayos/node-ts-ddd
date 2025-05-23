@@ -1,20 +1,17 @@
-import { Aggregate, type EntityProps, _Adapter } from "types-ddd";
 import type { DomainEvent } from "../event/domain-event";
 
-export class AggregateRoot<T extends EntityProps> extends Aggregate<any> {
-  private events: DomainEvent<any>[];
+export abstract class AggregateRoot {
+  private domainEvents: DomainEvent[];
 
-  constructor(props: T) {
-    super(props);
-    this.events = [];
+  constructor() {
+    this.domainEvents = [];
   }
 
-  registerEvent(event: DomainEvent<any>) {
-    this.events.push(event);
-    this.addEvent(event);
+  registerEvent(event: DomainEvent) {
+    this.domainEvents.push(event);
   }
 
-  getEvents() {
-    return this.events;
+  getEvents(): DomainEvent[] {
+    return this.domainEvents;
   }
 }

@@ -1,5 +1,3 @@
-import { Result } from "types-ddd";
-
 import crypto from "node:crypto";
 import type { CreateUserDTO } from "@modules/user/application/dto/create-user-dto";
 import { AggregateRoot } from "@shared/domain/aggregate/aggregate-root";
@@ -20,22 +18,44 @@ export type UserProps = {
   verifyCode?: string;
   createdAt: Date;
   updatedAt: Date;
+  roles: string[];
 };
 
-export class User extends AggregateRoot<UserProps> {
+export class User extends AggregateRoot {
+  private id: string;
+  private email: string;
+  private password: string;
+  private name?: string | null;
+  private phone?: string | null;
+  private verified: boolean;
+  private verifiedAt?: Date;
+  private verifyCode?: string;
+  private createdAt: Date;
+  private updatedAt: Date;
+  private roles: string[];
+
   private constructor(props: UserProps) {
-    super(props);
+    super();
+    this.id = props.id;
+    this.email = props.email;
+    this.password = props.password;
+    this.name = props.name;
+    this.phone = props.phone;
+    this.verified = props.verified;
+    this.verifiedAt = props.verifiedAt;
+    this.verifyCode = props.verifyCode;
+    this.createdAt = props.createdAt;
+    this.updatedAt = props.updatedAt;
+    this.roles = props.roles;
   }
 
-  static create(props: UserProps): Result<User> {
-    return Result.Ok(
-      new User({
-        ...props,
-      }),
-    );
+  static create(props: UserProps): User {
+    return new User({
+      ...props,
+    });
   }
 
-  static register(props: CreateUserDTO): Result<User> {
+  static register(props: CreateUserDTO): User {
     const userData: UserProps = {
       id: crypto.randomUUID().toString(),
       email: props.email,
@@ -45,55 +65,52 @@ export class User extends AggregateRoot<UserProps> {
       verified: false,
       createdAt: new Date(),
       updatedAt: new Date(),
+      roles: [],
     };
 
-    const result = User.create(userData);
+    const user = User.create(userData);
 
-    if (result.isFail()) return Result.fail(result.error());
-
-    const user = result.value();
-
-    user.addEvent(new UserCreated(user.id.value(), props.email));
-    return Result.Ok(user);
+    user.registerEvent(UserCreated.create(user.id));
+    return user;
   }
 
   validateAccount() {
-    this.props.verified = true;
-    this.props.verifiedAt = new Date();
-    this.props.verifyCode = undefined;
+    this.verified = true;
+    this.verifiedAt = new Date();
+    this.verifyCode = undefined;
 
-    this.addEvent(new UserValidated(this.id.value(), this.props.email));
+    this.registerEvent(UserValidated.create(this.id));
 
     return this;
   }
 
   forgotPassword() {
-    this.props.verifyCode = CodeGenerator.generateAlphanumericCode();
+    this.verifyCode = CodeGenerator.generateAlphanumericCode();
 
-    this.addEvent(new UserForgotPasswordEvent(this.id.value(), this.props.email));
+    this.registerEvent(UserForgotPasswordEvent.create(this.id));
 
     return this;
   }
 
   resetPassword(password: string) {
-    this.props.password = password;
-    this.props.verifyCode = undefined;
+    this.password = password;
+    this.verifyCode = undefined;
 
-    this.addEvent(new UserResetPasswordEvent(this.id.value(), this.props.email));
+    this.registerEvent(new UserResetPasswordEvent(this.id));
 
     return this;
   }
 
   toSafeObject() {
     return {
-      id: this.id.value(),
-      email: this.props.email,
-      name: this.props.name,
-      phone: this.props.phone,
-      createdAt: this.props.createdAt.toISOString(),
-      updatedAt: this.props.updatedAt.toISOString(),
-      verified: this.props.verified,
-      verifiedAt: this.props.verifiedAt?.toISOString(),
+      id: this.id,
+      email: this.email,
+      name: this.name,
+      phone: this.phone,
+      createdAt: this.createdAt.toISOString(),
+      updatedAt: this.updatedAt.toISOString(),
+      verified: this.verified,
+      verifiedAt: this.verifiedAt?.toISOString(),
     };
   }
 
@@ -102,38 +119,42 @@ export class User extends AggregateRoot<UserProps> {
   }
 
   getEmail() {
-    return this.props.email;
+    return this.email;
   }
 
   getPassword() {
-    return this.props.password;
+    return this.password;
   }
 
   getName() {
-    return this.props.name;
+    return this.name;
   }
 
   getPhone() {
-    return this.props.phone;
+    return this.phone;
   }
 
   getCreatedAt() {
-    return this.props.createdAt;
+    return this.createdAt;
   }
 
   getUpdatedAt() {
-    return this.props.updatedAt;
+    return this.updatedAt;
   }
 
   getVerified() {
-    return this.props.verified;
+    return this.verified;
   }
 
   getVerifiedAt() {
-    return this.props.verifiedAt;
+    return this.verifiedAt;
   }
 
   getVerifyCode() {
-    return this.props.verifyCode;
+    return this.verifyCode;
+  }
+
+  getRoles() {
+    return this.roles;
   }
 }

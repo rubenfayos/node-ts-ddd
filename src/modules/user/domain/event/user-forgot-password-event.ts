@@ -1,27 +1,19 @@
 import { User } from "@modules/user/domain/entity/user";
 import { DomainEvent } from "@shared/domain/event/domain-event";
 
-export class UserForgotPasswordEvent extends DomainEvent<User> {
-  static readonly NAME = "user.forgot_password";
-  $names = UserForgotPasswordEvent.NAME;
-  $version = 0;
+export class UserForgotPasswordEvent extends DomainEvent {
+  static readonly EVENT_NAME = "user.forgot_password";
+  version = 0;
 
-  constructor(
-    userId: string,
-    public readonly email: string,
-  ) {
-    super(userId, {
-      userId,
-      source: "UserService",
-    });
-  }
-
-  async handle(aggregate: User) {
-    const model = aggregate.toObject();
-    console.log("User Forgot Password", model);
+  public static create(userId: string): UserForgotPasswordEvent {
+    return new UserForgotPasswordEvent(userId);
   }
 
   getRelatedFQN(): string {
     return User.name;
+  }
+
+  public getName(): string {
+    return UserForgotPasswordEvent.EVENT_NAME;
   }
 }

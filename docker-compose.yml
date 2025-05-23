@@ -1,20 +1,21 @@
 version: '3.9'
 
 services:
-  app:
-    build: .
-    container_name: express-ddd-app
-    ports:
-      - "3000:3000"
-    depends_on:
-      - db
-    environment:
-      DATABASE_URL: "postgresql://postgres:postgres@db:5432/app"
-      NODE_ENV: production
-      APP_PORT: 3000
-    volumes:
-      - .:/app
-    command: sh -c "npx prisma migrate deploy && node dist/main.js"
+  # app:
+  #   build: .
+  #   container_name: express-ddd-app
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - db
+  #     - rabbitmq
+  #   environment:
+  #     DATABASE_URL: "postgresql://postgres:postgres@db:5432/app"
+  #     NODE_ENV: production
+  #     APP_PORT: 3000
+  #   volumes:
+  #     - .:/app
+  #   command: sh -c "npx prisma migrate deploy && node dist/main.js"
 
   db:
     image: postgres:15-alpine
@@ -28,5 +29,18 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: express-ddd-rabbitmq
+    ports:
+      - "5672:5672"   # RabbitMQ (AMQP)
+      - "15672:15672" # RabbitMQ Management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
 volumes:
   db_data:
+  rabbitmq_data:

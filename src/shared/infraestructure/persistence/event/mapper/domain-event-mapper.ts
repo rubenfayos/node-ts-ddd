@@ -1,18 +1,25 @@
 import type { Prisma, Event as PrismaDomainEvent } from "@prisma/client";
+import { EventSubscriptionStatus } from "@shared/domain/enum/event-subscription-status.enum";
 import { Event as DomainEvent } from "@shared/domain/event/event";
 
+// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class EventMapper {
-  static toPersistence(domain: DomainEvent): Prisma.EventCreateInput {
+  static toPersistence(domain: DomainEvent, handlerNames: string[]): Prisma.EventCreateInput {
     return {
-      id: domain.id.value(),
-      type: domain.type,
-      related_id: domain.relatedId,
-      root: domain.root,
-      user: domain.userId ? { connect: { id: domain.userId } } : undefined,
-      stream: domain.source ?? "null",
-      occurred_at: domain.occurredAt,
-      data: domain.payload as Prisma.InputJsonValue,
-      updated_at: domain.occurredAt,
+      id: domain.getId(),
+      type: domain.getType(),
+      related_id: domain.getRelatedId(),
+      root: domain.getRoot(),
+      user: domain.getUserId() ? { connect: { id: domain.getUserId() } } : undefined,
+      stream: domain.getStream(),
+      occurred_at: domain.getOccurredAt(),
+      data: domain.getData() as Prisma.InputJsonValue,
+      subscriptions: {
+        create: handlerNames.map((name) => ({
+          status: EventSubscriptionStatus.PENDING,
+          handler_name: name,
+        })),
+      },
     };
   }
 
@@ -23,7 +30,9 @@ export class EventMapper {
       userId: raw.user_id ?? undefined,
       source: raw.stream ?? undefined,
       occurredAt: raw.occurred_at,
-      payload: raw.data,
+      data: (raw.data as object) ?? {},
+      id: raw.id,
+      stream: raw.stream ?? undefined,
     });
   }
 }

@@ -14,12 +14,13 @@ export const UserMapper = {
       verified: raw.verified,
       verifiedAt: raw.verified_at ?? undefined,
       verifyCode: raw.verify_code ?? undefined,
-    }).value();
+      roles: [],
+    });
   },
 
   toPersistence(user: User): PrismaUser {
     return {
-      id: user.id.value(),
+      id: user.getId(),
       email: user.getEmail(),
       password: user.getPassword(),
       name: user.getName() ?? null,
@@ -30,12 +31,13 @@ export const UserMapper = {
       created_at: user.getCreatedAt() ?? new Date(),
       updated_at: user.getUpdatedAt() ?? new Date(),
       deleted_at: null,
+      roles: user.getRoles(),
     };
   },
 
   toResponseDTO(user: User) {
     return {
-      id: user.id.value(),
+      id: user.getId(),
       email: user.getEmail(),
       name: user.getName(),
       phone: user.getPhone(),

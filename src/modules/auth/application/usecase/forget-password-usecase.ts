@@ -1,12 +1,12 @@
 import type { ForgetPasswordInput } from "@modules/auth/infraestructure/http/contract/forget-password";
 import { UserReadRepository } from "@modules/user/infraestructure/persistence/repository/read";
 import { UserWriteRepository } from "@modules/user/infraestructure/persistence/repository/write";
-import { EventDispatcher } from "@shared/infraestructure/event/domain-event.dispatcher";
+import type { UseCaseInterface } from "@shared/application/usecase/usecase-interface";
+import { EventDispatcher } from "@shared/infraestructure/event/event-dispatcher";
 import { inject, injectable } from "tsyringe";
-import { type IUseCase, Result } from "types-ddd";
 
 @injectable()
-export class ForgetPasswordUseCase implements IUseCase<ForgetPasswordInput, Result<null>> {
+export class ForgetPasswordUseCase implements UseCaseInterface<ForgetPasswordInput, void> {
   constructor(
     @inject(UserReadRepository)
     private userReadRepository: UserReadRepository,
@@ -18,19 +18,20 @@ export class ForgetPasswordUseCase implements IUseCase<ForgetPasswordInput, Resu
     private eventDispatcher: EventDispatcher,
   ) {}
 
-  async execute(data: ForgetPasswordInput): Promise<Result<null>> {
+  async execute(data: ForgetPasswordInput): Promise<void> {
     const user = await this.userReadRepository.getUserByEmailOrThrow(data.email);
 
     if (!user.getVerified()) {
-      return Result.fail("not_verified", "User not verified");
+      throw new Error("not_verified");
+      // return Result.fail("not_verified", "User not verified");
     }
 
     user.forgotPassword();
 
     await this.userWriteRepository.update(user);
 
-    this.eventDispatcher.dispatchEvents(user);
-
-    return Result.Ok(null);
+    for (const event of user.getEvents()) {
+      this.eventDispatcher.dispatch(event);
+    }
   }
 }

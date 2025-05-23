@@ -4,12 +4,12 @@ import { User } from "@modules/user/domain/entity/user";
 import type { IUserCreateRepository } from "@modules/user/domain/interface/repository";
 import { UserReadRepository } from "@modules/user/infraestructure/persistence/repository/read";
 import { UserWriteRepository } from "@modules/user/infraestructure/persistence/repository/write";
-import { EventDispatcher } from "@shared/infraestructure/event/domain-event.dispatcher";
+import type { UseCaseInterface } from "@shared/application/usecase/usecase-interface";
+import { EventDispatcher } from "@shared/infraestructure/event/event-dispatcher";
 import { inject, injectable } from "tsyringe";
-import { type IUseCase, Result } from "types-ddd";
 
 @injectable()
-export class RegisterUserCase implements IUseCase<RegisterInput, Result<any>> {
+export class RegisterUserCase implements UseCaseInterface<RegisterInput, void> {
   constructor(
     @inject(UserReadRepository)
     private userReadRepository: UserReadRepository,
@@ -24,25 +24,26 @@ export class RegisterUserCase implements IUseCase<RegisterInput, Result<any>> {
     private eventDispatcher: EventDispatcher,
   ) {}
 
-  async execute(data: RegisterInput): Promise<Result> {
+  async execute(data: RegisterInput): Promise<void> {
     const existingUser = await this.userReadRepository.getUserByEmail(data.email);
 
     if (existingUser) {
-      return Result.fail("duplicate_user", "A user with that email and phone already exists");
+      throw new Error("duplicate_user");
+      // return Result.fail("duplicate_user", "A user with that email and phone already exists");
     }
 
     const hashedPassword = this.passwordService.hash(data.password);
 
-    const user = User.register({ ...data, password: hashedPassword }).value();
+    const user = User.register({ ...data, password: hashedPassword });
 
-    const result = await this.userWriteRepository.create(user);
+    await this.userWriteRepository.create(user);
 
-    if (result.isFail()) {
-      return Result.fail("error_creating_user", "An error occurred while creating the user");
+    // if (result.isFail()) {
+    //   return Result.fail("error_creating_user", "An error occurred while creating the user");
+    // }
+
+    for (const events of user.getEvents()) {
+      this.eventDispatcher.dispatch(events);
     }
-
-    this.eventDispatcher.dispatchEvents(user);
-
-    return Result.Ok();
   }
 }

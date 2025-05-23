@@ -3,15 +3,13 @@ import type { LoginResponse } from "@modules/auth/infraestructure/http/contract/
 import { PasswordService } from "@modules/auth/service/password-service";
 import { UserReadRepository } from "@modules/user/infraestructure/persistence/repository/read";
 import { UserWriteRepository } from "@modules/user/infraestructure/persistence/repository/write";
-import { EventDispatcher } from "@shared/infraestructure/event/domain-event.dispatcher";
+import type { UseCaseInterface } from "@shared/application/usecase/usecase-interface";
+import { EventDispatcher } from "@shared/infraestructure/event/event-dispatcher";
 import { JwtService } from "@shared/security/jwt-service";
 import { inject, injectable } from "tsyringe";
-import { type IUseCase, Result } from "types-ddd";
 
 @injectable()
-export class ResetPasswordUseCase
-  implements IUseCase<ResetPasswordInput, Result<LoginResponse, string>>
-{
+export class ResetPasswordUseCase implements UseCaseInterface<ResetPasswordInput, LoginResponse> {
   constructor(
     @inject(UserReadRepository)
     private userReadRepository: UserReadRepository,
@@ -29,10 +27,12 @@ export class ResetPasswordUseCase
     private eventDispatcher: EventDispatcher,
   ) {}
 
-  async execute(data: ResetPasswordInput): Promise<Result<LoginResponse, string>> {
+  async execute(data: ResetPasswordInput): Promise<LoginResponse> {
     const user = await this.userReadRepository.getUserByVerifyCode(data.code);
 
-    if (!user) return Result.fail("user_not_found", "User not found");
+    if (!user) {
+      throw new Error("user_not_found");
+    }
 
     const newPassword = this.passwordService.hash(data.password);
 
@@ -40,15 +40,17 @@ export class ResetPasswordUseCase
 
     await this.userWriteRepository.update(user);
 
-    const token = this.jwtService.generateToken({ email: user.getEmail() }, user.getId().value());
+    const token = this.jwtService.generateToken({ email: user.getEmail() }, user.getId());
 
-    this.eventDispatcher.dispatchEvents(user);
+    for (const events of user.getEvents()) {
+      this.eventDispatcher.dispatch(events);
+    }
 
     const userObject = user.toSafeObject();
 
-    return Result.Ok({
+    return {
       token,
       user: userObject,
-    });
+    };
   }
 }

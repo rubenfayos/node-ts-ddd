@@ -45,19 +45,17 @@ export class AuthController extends BaseController {
 
     const result = await this.loginUseCase.execute(payload);
 
-    if (result.isFail()) {
-      res.status(HttpStatus.BAD_REQUEST);
-      res.json({
-        error: result.error(),
-      });
+    // if (result.isFail()) {
+    //   res.status(HttpStatus.BAD_REQUEST);
+    //   res.json({
+    //     error: result.error(),
+    //   });
 
-      return;
-    }
-
-    const response = result.value();
+    //   return;
+    // }
 
     res.status(HttpStatus.OK);
-    res.json(response);
+    res.json(result);
   };
 
   registerHandler = async (req: Request, res: Response) => {
@@ -65,19 +63,17 @@ export class AuthController extends BaseController {
 
     const result = await this.registerUseCase.execute(payload);
 
-    if (result.isFail()) {
-      res.status(HttpStatus.BAD_REQUEST);
-      res.json({
-        error: result.error(),
-      });
+    // if (result.isFail()) {
+    //   res.status(HttpStatus.BAD_REQUEST);
+    //   res.json({
+    //     error: result.error(),
+    //   });
 
-      return;
-    }
-
-    const response = result.value();
+    //   return;
+    // }
 
     res.status(HttpStatus.CREATED);
-    res.json(response);
+    res.json(result);
   };
 
   forgetPassword = async (req: Request, res: Response) => {
@@ -85,19 +81,17 @@ export class AuthController extends BaseController {
 
     const result = await this.forgetPasswordUseCase.execute(payload);
 
-    if (result.isFail()) {
-      res.status(HttpStatus.BAD_REQUEST);
-      res.json({
-        error: result.error(),
-      });
+    // if (result.isFail()) {
+    //   res.status(HttpStatus.BAD_REQUEST);
+    //   res.json({
+    //     error: result.error(),
+    //   });
 
-      return;
-    }
-
-    const response = result.value();
+    //   return;
+    // }
 
     res.status(HttpStatus.CREATED);
-    res.json(response);
+    res.json(result);
   };
 
   resetPassword = async (req: Request, res: Response) => {
@@ -105,19 +99,8 @@ export class AuthController extends BaseController {
 
     const result = await this.resetPasswordUseCase.execute(payload);
 
-    if (result.isFail()) {
-      res.status(HttpStatus.BAD_REQUEST);
-      res.json({
-        error: result.error(),
-      });
-
-      return;
-    }
-
-    const response = result.value();
-
     res.status(HttpStatus.CREATED);
-    res.json(response);
+    res.json(result);
   };
 
   verifyEmail = async (req: Request, res: Response) => {
@@ -125,18 +108,16 @@ export class AuthController extends BaseController {
 
     const result = await this.verifyEmailUseCase.execute(payload);
 
-    if (result.isFail()) {
-      res.status(HttpStatus.BAD_REQUEST);
-      res.json({
-        error: result.error(),
-      });
+    // if (result.isFail()) {
+    //   res.status(HttpStatus.BAD_REQUEST);
+    //   res.json({
+    //     error: result.error(),
+    //   });
 
-      return;
-    }
-
-    const response = result.value();
+    //   return;
+    // }
 
     res.status(HttpStatus.CREATED);
-    res.json(response);
+    res.json(result);
   };
 }

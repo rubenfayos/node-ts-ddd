@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
@@ -9,34 +9,71 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  name      String?
-  password  String
-  phone     String?
-  verified  Boolean  @default(false)
+  id          String    @id @default(uuid())
+  email       String    @unique
+  name        String?
+  password    String
+  phone       String?
+  roles       String[]
+  verified    Boolean   @default(false)
   verified_at DateTime?
   verify_code String?
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt @default(now())
+  // timestamps
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now()) @updatedAt
   deleted_at DateTime?
 
   // Relations
   events Event[]
+
+  @@map("core_users")
 }
 
 model Event {
-  id        String   @id @default(uuid())
-  related_id String   
-  stream    String
+  id          String   @id @default(uuid())
+  related_id  String
   occurred_at DateTime @default(now())
-  type      String
-  root      String
-  updated_at DateTime @updatedAt @default(now())
-  data      Json?
+  type        String
+  root        String
+  
+  data        Json?
+  stream      String?
 
   // Relations
-  user_id    String?
-  user      User?   @relation(fields: [user_id], references: [id])
+  user_id String?
+  user    User?   @relation(fields: [user_id], references: [id])
+
+  subscriptions       EventSubscription[]
+  subscription_errors EventSubscriptionError[]
+
+  @@map("core_events")
+}
+
+model EventSubscription {
+  id       String @id @default(uuid())
+  event    Event  @relation(fields: [event_id], references: [id])
+  event_id String
+
+  handler_name String
+  status       String
+  retries      Int      @default(0)
+  executed_at  DateTime? 
+
+  error EventSubscriptionError?
+
+  @@map("core_event_subscriptions")
+}
+
+model EventSubscriptionError {
+  id              String            @id @default(uuid())
+  subscription    EventSubscription @relation(fields: [subscription_id], references: [id])
+  subscription_id String            @unique
+
+  message    String
+  trace      String?
+  occurredAt DateTime @default(now())
+  event      Event[]
+
+  @@map("core_event_subscription_errors")
 }

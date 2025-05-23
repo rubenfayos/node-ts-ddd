@@ -4,6 +4,7 @@ import registerApplicationRouters from "@shared/infraestructure/http/controller"
 import registerApplicationMiddlewares from "@shared/infraestructure/http/middleware";
 
 import Config from "@config";
+import { bootstrapEventSystem } from "@shared/infraestructure/event/event-system-bootstrapper";
 import express, { type Application } from "express";
 
 @injectable()
@@ -16,6 +17,7 @@ export class HttpServer {
   }
 
   private async init() {
+    await bootstrapEventSystem();
     await this.registerRoutes();
 
     // await initDB();

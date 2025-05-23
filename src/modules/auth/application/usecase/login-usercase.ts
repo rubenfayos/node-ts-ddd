@@ -1,12 +1,12 @@
 import type { LoginInput, LoginResponse } from "@modules/auth/infraestructure/http/contract/login";
 import { PasswordService } from "@modules/auth/service/password-service";
 import { UserReadRepository } from "@modules/user/infraestructure/persistence/repository/read";
+import type { UseCaseInterface } from "@shared/application/usecase/usecase-interface";
 import { JwtService } from "@shared/security/jwt-service";
 import { inject, injectable } from "tsyringe";
-import { type IUseCase, Result } from "types-ddd";
 
 @injectable()
-export class LoginUserCase implements IUseCase<LoginInput, Result<LoginResponse, string>> {
+export class LoginUserCase implements UseCaseInterface<LoginInput, LoginResponse> {
   constructor(
     @inject(UserReadRepository)
     private userReadRepository: UserReadRepository,
@@ -18,22 +18,26 @@ export class LoginUserCase implements IUseCase<LoginInput, Result<LoginResponse,
     private passwordService: PasswordService,
   ) {}
 
-  async execute(data: LoginInput): Promise<Result<LoginResponse, string>> {
+  async execute(data: LoginInput): Promise<LoginResponse> {
     const user = await this.userReadRepository.getUserByEmail(data.email);
 
-    if (!user) return Result.fail("user_not_found", "User not found");
+    if (!user) {
+      throw new Error("user_not_found");
+    }
 
     const compare = this.passwordService.compare(data.password, user.getPassword());
 
-    if (!compare) return Result.fail("invalid_credentials", "Invalid credentials");
+    if (!compare) {
+      throw new Error("invalid_credentials");
+    }
 
-    const token = this.jwtService.generateToken({ email: user.getEmail() }, user.getId().value());
+    const token = this.jwtService.generateToken({ email: user.getEmail() }, user.getId());
 
     const userObject = user.toSafeObject();
 
-    return Result.Ok({
+    return {
       token,
       user: userObject,
-    });
+    };
   }
 }

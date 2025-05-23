@@ -1,6 +1,7 @@
 import type { Event } from "@shared/domain/event/event";
-import type { Result } from "types-ddd";
+import type { EventSubscription } from "@shared/domain/event/event-subscription";
 
 export interface IEventWriteRepository {
-  create(event: Event): Promise<Result<Event>>;
+  create(event: Event, handlerNames: string[]): Promise<Event>;
+  updateSubscription(event: EventSubscription): Promise<void>;
 }
