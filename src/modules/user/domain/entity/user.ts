@@ -1,11 +1,11 @@
 import crypto from "node:crypto";
 import type { CreateUserDTO } from "@modules/user/application/dto/create-user-dto";
-import { AggregateRoot } from "@shared/domain/aggregate/aggregate-root";
 import { CodeGenerator } from "@shared/security/code-generator-service";
 import { UserCreated } from "../event/user-created";
 import { UserForgotPasswordEvent } from "../event/user-forgot-password-event";
 import { UserResetPasswordEvent } from "../event/user-reset-password-event";
 import { UserValidated } from "../event/user-validated";
+import {AggregateRoot} from "@core/domain/aggregate/aggregate-root";
 
 export type UserProps = {
   id: string;

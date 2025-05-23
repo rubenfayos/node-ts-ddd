@@ -26,6 +26,7 @@ model User {
 
   // Relations
   events Event[]
+  files  File[]
 
   @@map("core_users")
 }
@@ -36,9 +37,9 @@ model Event {
   occurred_at DateTime @default(now())
   type        String
   root        String
-  
-  data        Json?
-  stream      String?
+
+  data   Json?
+  stream String?
 
   // Relations
   user_id String?
@@ -57,8 +58,8 @@ model EventSubscription {
 
   handler_name String
   status       String
-  retries      Int      @default(0)
-  executed_at  DateTime? 
+  retries      Int       @default(0)
+  executed_at  DateTime?
 
   error EventSubscriptionError?
 
@@ -76,4 +77,19 @@ model EventSubscriptionError {
   event      Event[]
 
   @@map("core_event_subscription_errors")
+}
+
+model File {
+  id            String   @id @default(uuid())
+  path          String
+  relative_path String
+  filename      String
+  mimetype      String
+  size          Int
+  is_public     Boolean  @default(false)
+  user_id       String?
+  user          User?    @relation(fields: [user_id], references: [id])
+  created_at    DateTime @default(now())
+
+  @@map("core_files")
 }
