@@ -1,9 +1,9 @@
-import type { LoginResponse } from "@modules/auth/infraestructure/http/contract/login";
-import type { VerifyEmailInput } from "@modules/auth/infraestructure/http/contract/verify-email";
-import { UserReadRepository } from "@modules/user/infraestructure/persistence/repository/read";
-import { UserWriteRepository } from "@modules/user/infraestructure/persistence/repository/write";
+import type { LoginResponse } from "@modules/auth/infrastructure/http/contract/login";
+import type { VerifyEmailInput } from "@modules/auth/infrastructure/http/contract/verify-email";
+import { UserReadRepository } from "@modules/user/infrastructure/persistence/repository/read";
+import { UserWriteRepository } from "@modules/user/infrastructure/persistence/repository/write";
 import type { UseCaseInterface } from "@shared/application/usecase/usecase-interface";
-import { EventDispatcher } from "@shared/infraestructure/event/event-dispatcher";
+import { EventDispatcher } from "@shared/infrastructure/event/event-dispatcher";
 import { JwtService } from "@shared/security/jwt-service";
 import { inject, injectable } from "tsyringe";
 

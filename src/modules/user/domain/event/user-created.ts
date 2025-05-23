@@ -1,5 +1,5 @@
+import {DomainEvent} from "@core/domain/event/domain-event";
 import { User } from "@modules/user/domain/entity/user";
-import { DomainEvent } from "@shared/domain/event/domain-event";
 
 export class UserCreated extends DomainEvent {
   static readonly EVENT_NAME = "user.created";

@@ -1,7 +1,7 @@
-// @shared/domain/event/event-subscriber.interface.ts
-import type { DomainEvent } from "./domain-event";
-import type { EventHandler } from "./event-handler";
+import type { DomainEvent } from "@core/domain/event/domain-event";
+import type { EventHandler } from "@core/domain/event/event-handler";
 
+// @shared/domain/event/event-subscriber.interface.ts
 export interface EventSubscriberInterface {
   getName(): string;
 

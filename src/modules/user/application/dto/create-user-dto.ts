@@ -1,5 +1,5 @@
 import { UserAttributesSchema } from "@modules/user/domain/interface/user";
-import { registry } from "@shared/infraestructure/http/docs/openapi-registry";
+import { registry } from "@shared/infrastructure/http/docs/openapi-registry";
 
 import type { z } from "zod";
 

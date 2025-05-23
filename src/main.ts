@@ -1,7 +1,7 @@
 import "reflect-metadata";
-import { startEventListener } from "@shared/infraestructure/event/event-listener";
-import { EventPublisher } from "@shared/infraestructure/event/event-published";
-import { HttpServer } from "@shared/infraestructure/http/server";
+import { startEventListener } from "@shared/infrastructure/event/event-listener";
+import { EventPublisher } from "@shared/infrastructure/event/event-published";
+import { HttpServer } from "@shared/infrastructure/http/server";
 import { container } from "tsyringe";
 
 const server = container.resolve(HttpServer);

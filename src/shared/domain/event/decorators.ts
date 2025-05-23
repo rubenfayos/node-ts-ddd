@@ -1,6 +1,6 @@
+import type { DomainEvent } from "@core/domain/event/domain-event";
+import type { EventHandler } from "@core/domain/event/event-handler";
 import type { Constructor } from "@shared/types/constructor";
-import type { DomainEvent } from "./domain-event";
-import type { EventHandler } from "./event-handler";
 
 type EventHandlerClass = Constructor<EventHandler<DomainEvent>>;
 

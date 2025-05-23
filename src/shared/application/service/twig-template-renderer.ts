@@ -1,6 +1,6 @@
 import path from "node:path";
 // shared/template/TwigTemplateRenderer.ts
-import type { TemplateRenderer } from "@shared/domain/template/template-renderer";
+import type { TemplateRenderer } from "@core/domain/template-renderer";
 import { injectable } from "tsyringe";
 import { renderFile } from "twig";
 

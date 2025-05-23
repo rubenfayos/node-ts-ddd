@@ -1,6 +1,6 @@
-import type { LoginInput, LoginResponse } from "@modules/auth/infraestructure/http/contract/login";
+import type { LoginInput, LoginResponse } from "@modules/auth/infrastructure/http/contract/login";
 import { PasswordService } from "@modules/auth/service/password-service";
-import { UserReadRepository } from "@modules/user/infraestructure/persistence/repository/read";
+import { UserReadRepository } from "@modules/user/infrastructure/persistence/repository/read";
 import type { UseCaseInterface } from "@shared/application/usecase/usecase-interface";
 import { JwtService } from "@shared/security/jwt-service";
 import { inject, injectable } from "tsyringe";

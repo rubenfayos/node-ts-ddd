@@ -1,8 +1,8 @@
-import { NodemailerService } from "@modules/mail/infraestructure/services/node-mailer-service";
+import {EventHandler} from "@core/domain/event/event-handler";
+import { NodemailerService } from "@modules/mail/infrastructure/services/node-mailer-service";
 import { UserValidated } from "@modules/user/domain/event/user-validated";
 import { TwigTemplateRenderer } from "@shared/application/service/twig-template-renderer";
 import { SubscribeTo } from "@shared/domain/event/decorators";
-import { EventHandler } from "@shared/domain/event/event-handler";
 import { inject, injectable } from "tsyringe";
 
 @injectable()

@@ -1,11 +1,11 @@
-import type { RegisterInput } from "@modules/auth/infraestructure/http/contract/register";
+import type { RegisterInput } from "@modules/auth/infrastructure/http/contract/register";
 import { PasswordService } from "@modules/auth/service/password-service";
 import { User } from "@modules/user/domain/entity/user";
 import type { IUserCreateRepository } from "@modules/user/domain/interface/repository";
-import { UserReadRepository } from "@modules/user/infraestructure/persistence/repository/read";
-import { UserWriteRepository } from "@modules/user/infraestructure/persistence/repository/write";
+import { UserReadRepository } from "@modules/user/infrastructure/persistence/repository/read";
+import { UserWriteRepository } from "@modules/user/infrastructure/persistence/repository/write";
 import type { UseCaseInterface } from "@shared/application/usecase/usecase-interface";
-import { EventDispatcher } from "@shared/infraestructure/event/event-dispatcher";
+import { EventDispatcher } from "@shared/infrastructure/event/event-dispatcher";
 import { inject, injectable } from "tsyringe";
 
 @injectable()
