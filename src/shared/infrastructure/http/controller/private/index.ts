@@ -1,5 +1,6 @@
 import userRouter from "@shared/infrastructure/http/controller/private/user/v1";
 import filesRouter from "@shared/infrastructure/http/controller/private/files/v1";
+import organizationsRouter from "@shared/infrastructure/http/controller/private/organization/v1";
 
 import { Router } from "express";
 
@@ -15,5 +16,7 @@ router.use("", jwtMiddleware.handle);
 router.use("/v1/users", userRouter);
 
 router.use("/v1/files", filesRouter);
+
+router.use("/v1/organizations", organizationsRouter);
 
 export default router;

@@ -1,6 +1,7 @@
 import { UserAttributesSchema } from "@modules/user/domain/interface/user";
 import { registry } from "@shared/infrastructure/http/docs/openapi-registry";
 import { GetAllResponseSchema } from "../contract/api";
+import { getUserResponseSchema } from "../contract/response/get-user.response";
 
 registry.registerPath({
   method: "get",
@@ -29,7 +30,7 @@ registry.registerPath({
       description: "User",
       content: {
         "application/json": {
-          schema: UserAttributesSchema,
+          schema: getUserResponseSchema,
         },
       },
     },

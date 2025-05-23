@@ -65,4 +65,12 @@ export async function startEventListener() {
   });
 
   logger.log("Listener started");
+
+  return {
+    stop: async () => {
+      await channel.close();
+      await conn.close();
+      console.log("RabbitMQ listener closed.");
+    },
+  };
 }

@@ -5,12 +5,12 @@ import { BaseController } from "@shared/infrastructure/http/utils/base-controlle
 import { type Request, type Response, Router } from "express";
 import { inject, injectable } from "tsyringe";
 
-import { ForgetPasswordUseCase } from "@modules/auth/application/usecase/forget-password-usecase";
+import { ForgotPasswordUseCase } from "@modules/auth/application/usecase/forgot-password-usecase";
 import { LoginUserCase } from "@modules/auth/application/usecase/login-usercase";
 import { RegisterUserCase } from "@modules/auth/application/usecase/register-usecase";
 import { ResetPasswordUseCase } from "@modules/auth/application/usecase/reset-password-usecase";
 import { VerifyEmailUseCase } from "@modules/auth/application/usecase/verify-email-usecase";
-import type { ForgetPasswordInput, ResetPasswordInput } from "../contract/forget-password";
+import type { ForgotPasswordInput, ResetPasswordInput } from "../contract/forgot-password";
 import type { VerifyEmailInput } from "../contract/verify-email";
 
 @injectable()
@@ -21,7 +21,7 @@ export class AuthController extends BaseController {
     @inject(LoginUserCase) private loginUseCase: LoginUserCase,
     @inject(RegisterUserCase) private registerUseCase: RegisterUserCase,
     @inject(VerifyEmailUseCase) private verifyEmailUseCase: VerifyEmailUseCase,
-    @inject(ForgetPasswordUseCase) private forgetPasswordUseCase: ForgetPasswordUseCase,
+    @inject(ForgotPasswordUseCase) private forgotPasswordUseCase: ForgotPasswordUseCase,
     @inject(ResetPasswordUseCase) private resetPasswordUseCase: ResetPasswordUseCase,
   ) {
     super();
@@ -32,7 +32,7 @@ export class AuthController extends BaseController {
     this.router.post("/login", this.login);
     this.router.post("/register", this.registerHandler);
 
-    this.router.post("/forget-password", this.forgetPassword);
+    this.router.post("/forgot-password", this.forgetPassword);
     this.router.post("/reset-password", this.resetPassword);
 
     this.router.post("/verify-email", this.verifyEmail);
@@ -77,9 +77,9 @@ export class AuthController extends BaseController {
   };
 
   forgetPassword = async (req: Request, res: Response) => {
-    const payload = <ForgetPasswordInput>req.body;
+    const payload = <ForgotPasswordInput>req.body;
 
-    const result = await this.forgetPasswordUseCase.execute(payload);
+    const result = await this.forgotPasswordUseCase.execute(payload);
 
     // if (result.isFail()) {
     //   res.status(HttpStatus.BAD_REQUEST);
@@ -90,7 +90,7 @@ export class AuthController extends BaseController {
     //   return;
     // }
 
-    res.status(HttpStatus.CREATED);
+    res.status(HttpStatus.NO_CONTENT);
     res.json(result);
   };
 
@@ -99,7 +99,7 @@ export class AuthController extends BaseController {
 
     const result = await this.resetPasswordUseCase.execute(payload);
 
-    res.status(HttpStatus.CREATED);
+    res.status(HttpStatus.OK);
     res.json(result);
   };
 
@@ -108,16 +108,7 @@ export class AuthController extends BaseController {
 
     const result = await this.verifyEmailUseCase.execute(payload);
 
-    // if (result.isFail()) {
-    //   res.status(HttpStatus.BAD_REQUEST);
-    //   res.json({
-    //     error: result.error(),
-    //   });
-
-    //   return;
-    // }
-
-    res.status(HttpStatus.CREATED);
+    res.status(HttpStatus.OK);
     res.json(result);
   };
 }

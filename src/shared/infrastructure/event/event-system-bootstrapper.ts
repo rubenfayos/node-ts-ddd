@@ -1,4 +1,3 @@
-// src/shared/infrastructure/event/event-system-bootstrapper.ts
 import path from "node:path";
 import fg from "fast-glob";
 

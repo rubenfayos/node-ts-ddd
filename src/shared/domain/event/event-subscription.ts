@@ -1,6 +1,6 @@
 import crypto from "node:crypto";
 import { EventSubscriptionStatus } from "@shared/domain/enum/event-subscription-status.enum";
-import {AggregateRoot} from "@core/domain/aggregate/aggregate-root";
+import { AggregateRoot } from "@core/domain/aggregate/aggregate-root";
 
 interface EventSubscriptionProps {
   id: string;

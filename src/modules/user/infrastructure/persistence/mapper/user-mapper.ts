@@ -43,6 +43,7 @@ export const UserMapper = {
       phone: user.getPhone(),
       createdAt: user.getCreatedAt().toISOString(),
       updatedAt: user.getUpdatedAt().toISOString(),
+      verified: user.getVerified(),
     };
   },
 };

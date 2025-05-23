@@ -1,7 +1,6 @@
-
 import crypto from "node:crypto";
-import {AggregateRoot} from "@core/domain/aggregate/aggregate-root";
-
+import { AggregateRoot } from "@core/domain/aggregate/aggregate-root";
+import type { TimelineEvent } from "@shared/application/contract/timeline-event.schema";
 
 export interface EventProps {
   id: string;
@@ -43,6 +42,16 @@ export class Event extends AggregateRoot {
       ...props,
       id: crypto.randomUUID(),
     });
+  }
+
+  toTimeline(): TimelineEvent {
+    return {
+      type: this.type,
+      relatedId: this.relatedId,
+      userId: this.userId,
+      occurredAt: this.occurredAt.toISOString(),
+      data: this.data,
+    };
   }
 
   static extractRoot(type: string): string {

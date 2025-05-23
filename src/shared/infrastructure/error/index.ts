@@ -6,3 +6,4 @@ export * from "@shared/infrastructure/error/validation";
 export * from "@shared/infrastructure/error/aggregate-not-found";
 export * from "@shared/infrastructure/error/not_implemented";
 export * from "@shared/infrastructure/error/state_error";
+export * from "@shared/infrastructure/error/conflict";

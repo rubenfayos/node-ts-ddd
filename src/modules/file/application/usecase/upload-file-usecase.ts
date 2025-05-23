@@ -25,7 +25,11 @@ export class UploadFileUseCase implements UseCaseInterface<UploadFileInput, Uplo
   async execute(data: UploadFileInput): Promise<UploadFileResponse> {
     const { file, isPublic, userId } = data;
 
-    const upload = await this.storage.upload(`${userId}/${file.originalname}`, file.buffer, isPublic);
+    const upload = await this.storage.upload(
+      `${userId}/${file.originalname}`,
+      file.buffer,
+      isPublic,
+    );
 
     const fileInstance = File.create({
       path: upload.url,
@@ -40,8 +44,8 @@ export class UploadFileUseCase implements UseCaseInterface<UploadFileInput, Uplo
     await this.fileWriteRepository.create(fileInstance);
 
     return {
-        id: fileInstance.getId(),
-        path: fileInstance.getPath(),
+      id: fileInstance.getId(),
+      path: fileInstance.getPath(),
     };
   }
 }

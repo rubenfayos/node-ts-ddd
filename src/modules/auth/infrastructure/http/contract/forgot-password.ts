@@ -1,7 +1,7 @@
 import { registry } from "@shared/infrastructure/http/docs/openapi-registry";
 import { z } from "zod";
 
-export const forgetPasswordSchema = z.object({
+export const forgotPasswordSchema = z.object({
   email: z.string(),
 });
 
@@ -10,10 +10,10 @@ export const resetPasswordSchema = z.object({
   password: z.string(),
 });
 
-registry.register("ForgetPassword", forgetPasswordSchema);
+registry.register("ForgotPassword", forgotPasswordSchema);
 
 registry.register("ResetPassword", resetPasswordSchema);
 
-export type ForgetPasswordInput = z.infer<typeof forgetPasswordSchema>;
+export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
 
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;

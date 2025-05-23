@@ -1,5 +1,5 @@
+import { AggregateRoot } from "@core/domain/aggregate/aggregate-root";
 import crypto from "node:crypto";
-import { AggregateRoot } from "@shared/domain/aggregate/aggregate-root";
 
 interface EventSubscriptionErrorProps {
   id: string;

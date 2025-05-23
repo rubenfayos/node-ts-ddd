@@ -2,6 +2,7 @@ import type { LoginInput, LoginResponse } from "@modules/auth/infrastructure/htt
 import { PasswordService } from "@modules/auth/service/password-service";
 import { UserReadRepository } from "@modules/user/infrastructure/persistence/repository/read";
 import type { UseCaseInterface } from "@shared/application/usecase/usecase-interface";
+import { UnauthorizedError } from "@shared/infrastructure/error";
 import { JwtService } from "@shared/security/jwt-service";
 import { inject, injectable } from "tsyringe";
 
@@ -28,10 +29,13 @@ export class LoginUserCase implements UseCaseInterface<LoginInput, LoginResponse
     const compare = this.passwordService.compare(data.password, user.getPassword());
 
     if (!compare) {
-      throw new Error("invalid_credentials");
+      throw new UnauthorizedError("invalid_credentials");
     }
 
-    const token = this.jwtService.generateToken({ email: user.getEmail() }, user.getId());
+    const token = this.jwtService.generateToken(
+      { email: user.getEmail(), roles: user.getRoles() },
+      user.getId(),
+    );
 
     const userObject = user.toSafeObject();
 

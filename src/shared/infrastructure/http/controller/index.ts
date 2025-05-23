@@ -7,8 +7,10 @@ import swaggerRouter from "@shared/infrastructure/http/controller/swagger/";
 import path from "node:path";
 
 const registerApplicationRouters = async (app: Application) => {
-
-  app.use("/public", express.static(path.resolve(__dirname, path.join("..", "..", "..", "..", "..", "public"))));
+  app.use(
+    "/public",
+    express.static(path.resolve(__dirname, path.join("..", "..", "..", "..", "..", "public"))),
+  );
 
   app.use(swaggerRouter);
 

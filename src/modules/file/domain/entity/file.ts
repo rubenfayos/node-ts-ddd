@@ -1,4 +1,4 @@
-import {AggregateRoot} from "@core/domain/aggregate/aggregate-root";
+import { AggregateRoot } from "@core/domain/aggregate/aggregate-root";
 import crypto from "node:crypto";
 
 type FileProps = {
@@ -13,15 +13,14 @@ type FileProps = {
 };
 
 export class File extends AggregateRoot {
-
-    private readonly id: string;
-    private readonly path: string;
-    private readonly relativePath: string;
-    private readonly isPublic: boolean;
-    private readonly userId?: string;
-    private readonly filename: string;
-    private readonly mimetype: string;
-    private readonly size: number;
+  private readonly id: string;
+  private readonly path: string;
+  private readonly relativePath: string;
+  private readonly isPublic: boolean;
+  private readonly userId?: string;
+  private readonly filename: string;
+  private readonly mimetype: string;
+  private readonly size: number;
 
   constructor(props: FileProps) {
     super();
@@ -72,5 +71,5 @@ export class File extends AggregateRoot {
 
   getUserId() {
     return this.userId;
-  } 
+  }
 }

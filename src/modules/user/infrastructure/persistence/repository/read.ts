@@ -3,6 +3,7 @@ import type { IUserReadRepository } from "@modules/user/domain/interface/reposit
 import { PrismaService } from "@shared/infrastructure/persistence/prisma/prisma-service";
 import { inject, singleton } from "tsyringe";
 import { UserMapper } from "../mapper/user-mapper";
+import { NotFoundError } from "@shared/infrastructure/error";
 
 @singleton()
 export class UserReadRepository implements IUserReadRepository {
@@ -39,7 +40,7 @@ export class UserReadRepository implements IUserReadRepository {
       where: { email: email },
     });
 
-    if (!user) throw new Error("User not found");
+    if (!user) throw new NotFoundError("user_not_found");
 
     return UserMapper.toDomain(user);
   }

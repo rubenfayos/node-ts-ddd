@@ -1,5 +1,5 @@
 import { registry } from "@shared/infrastructure/http/docs/openapi-registry";
-import { forgetPasswordSchema, resetPasswordSchema } from "../contract/forget-password";
+import { forgotPasswordSchema, resetPasswordSchema } from "../contract/forgot-password";
 import { LoginResponseSchema, LoginSchema } from "../contract/login";
 import { RegisterSchema } from "../contract/register";
 import { verifyEmailSchema } from "../contract/verify-email";
@@ -53,26 +53,21 @@ registry.registerPath({
 
 registry.registerPath({
   method: "post",
-  path: "/v1/auth/forget-password",
+  path: "/v1/auth/forgot-password",
   summary: "Forget password",
   tags: ["Auth"],
   request: {
     body: {
       content: {
         "application/json": {
-          schema: forgetPasswordSchema,
+          schema: forgotPasswordSchema,
         },
       },
     },
   },
   responses: {
-    200: {
-      description: "User and token",
-      content: {
-        "application/json": {
-          schema: LoginResponseSchema,
-        },
-      },
+    204: {
+      description: "Password reset request sent",
     },
   },
 });

@@ -23,7 +23,7 @@ export class EventWriteRepository implements IEventWriteRepository {
   }
 
   async updateSubscription(subscription: EventSubscription): Promise<void> {
-    const updatedSubscription = await this.db.client.eventSubscription.updateMany({
+    await this.db.client.eventSubscription.updateMany({
       where: {
         event_id: subscription.eventId,
         handler_name: subscription.handlerName,

@@ -1,8 +1,10 @@
-import {registry} from "@shared/infrastructure/http/docs/openapi-registry";
-import {uploadFileBodySchema, uploadFileResponseSchema} from "@modules/file/infraestructure/http/contract/upload-file.contract";
-import {getFileParams} from "@modules/file/infraestructure/http/contract/get-file.contract";
-import {z} from "zod";
-
+import { registry } from "@shared/infrastructure/http/docs/openapi-registry";
+import {
+  uploadFileBodySchema,
+  uploadFileResponseSchema,
+} from "@modules/file/infraestructure/http/contract/upload-file.contract";
+import { getFileParams } from "@modules/file/infraestructure/http/contract/get-file.contract";
+import { z } from "zod";
 
 registry.registerPath({
   method: "post",

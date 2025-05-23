@@ -1,12 +1,13 @@
-import type { ForgetPasswordInput } from "@modules/auth/infrastructure/http/contract/forget-password";
+import type { ForgotPasswordInput } from "@modules/auth/infrastructure/http/contract/forgot-password";
 import { UserReadRepository } from "@modules/user/infrastructure/persistence/repository/read";
 import { UserWriteRepository } from "@modules/user/infrastructure/persistence/repository/write";
 import type { UseCaseInterface } from "@shared/application/usecase/usecase-interface";
+import { ConflictError } from "@shared/infrastructure/error";
 import { EventDispatcher } from "@shared/infrastructure/event/event-dispatcher";
 import { inject, injectable } from "tsyringe";
 
 @injectable()
-export class ForgetPasswordUseCase implements UseCaseInterface<ForgetPasswordInput, void> {
+export class ForgotPasswordUseCase implements UseCaseInterface<ForgotPasswordInput, void> {
   constructor(
     @inject(UserReadRepository)
     private userReadRepository: UserReadRepository,
@@ -18,12 +19,11 @@ export class ForgetPasswordUseCase implements UseCaseInterface<ForgetPasswordInp
     private eventDispatcher: EventDispatcher,
   ) {}
 
-  async execute(data: ForgetPasswordInput): Promise<void> {
+  async execute(data: ForgotPasswordInput): Promise<void> {
     const user = await this.userReadRepository.getUserByEmailOrThrow(data.email);
 
     if (!user.getVerified()) {
-      throw new Error("not_verified");
-      // return Result.fail("not_verified", "User not verified");
+      throw new ConflictError("not_verified");
     }
 
     user.forgotPassword();

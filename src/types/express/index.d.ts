@@ -3,7 +3,7 @@ declare global {
     interface Locals {
       user: {
         id: string;
-        role?: string;
+        roles: string[];
       };
     }
   }

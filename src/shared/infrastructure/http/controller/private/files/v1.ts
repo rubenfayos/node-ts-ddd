@@ -1,5 +1,4 @@
-
-import {FileController} from "@modules/file/infraestructure/http/controller/file-controller";
+import { FileController } from "@modules/file/infraestructure/http/controller/file-controller";
 import { Router } from "express";
 import { container } from "tsyringe";
 

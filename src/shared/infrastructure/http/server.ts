@@ -1,3 +1,4 @@
+import "express-async-errors";
 import { injectable } from "tsyringe";
 
 import registerApplicationRouters from "@shared/infrastructure/http/controller";
@@ -6,6 +7,7 @@ import registerApplicationMiddlewares from "@shared/infrastructure/http/middlewa
 import Config from "@config";
 import { bootstrapEventSystem } from "@shared/infrastructure/event/event-system-bootstrapper";
 import express, { type Application } from "express";
+import { errorHandler } from "@shared/infrastructure/http/middleware/error-handler";
 
 @injectable()
 export class HttpServer {
@@ -17,7 +19,10 @@ export class HttpServer {
   }
 
   private async init() {
-    await bootstrapEventSystem();
+    if (Config.NODE_ENV !== "test") {
+      await bootstrapEventSystem();
+    }
+
     await this.registerRoutes();
 
     // await initDB();
@@ -28,6 +33,8 @@ export class HttpServer {
   public async registerRoutes() {
     await registerApplicationMiddlewares(this.app);
     await registerApplicationRouters(this.app);
+
+    this.app.use(errorHandler);
   }
 
   public async startServer() {

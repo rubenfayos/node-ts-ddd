@@ -1,4 +1,4 @@
-import {DomainEvent} from "@core/domain/event/domain-event";
+import { DomainEvent } from "@core/domain/event/domain-event";
 import { User } from "@modules/user/domain/entity/user";
 
 export class UserCreated extends DomainEvent {
@@ -23,7 +23,11 @@ export class UserCreated extends DomainEvent {
   // }
 
   public static create(userId: string): UserCreated {
-    return new UserCreated(userId);
+    const event = new UserCreated(userId);
+
+    event.stream = `user:${userId}`;
+
+    return event;
   }
 
   public getRelatedFQN(): string {

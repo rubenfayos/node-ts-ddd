@@ -5,6 +5,7 @@ import type { IUserCreateRepository } from "@modules/user/domain/interface/repos
 import { UserReadRepository } from "@modules/user/infrastructure/persistence/repository/read";
 import { UserWriteRepository } from "@modules/user/infrastructure/persistence/repository/write";
 import type { UseCaseInterface } from "@shared/application/usecase/usecase-interface";
+import { ValidationError } from "@shared/infrastructure/error";
 import { EventDispatcher } from "@shared/infrastructure/event/event-dispatcher";
 import { inject, injectable } from "tsyringe";
 
@@ -28,8 +29,7 @@ export class RegisterUserCase implements UseCaseInterface<RegisterInput, void> {
     const existingUser = await this.userReadRepository.getUserByEmail(data.email);
 
     if (existingUser) {
-      throw new Error("duplicate_user");
-      // return Result.fail("duplicate_user", "A user with that email and phone already exists");
+      throw new ValidationError("email", "A user with that email already exists");
     }
 
     const hashedPassword = this.passwordService.hash(data.password);

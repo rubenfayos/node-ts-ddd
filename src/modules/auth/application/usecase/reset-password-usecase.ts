@@ -1,9 +1,10 @@
-import type { ResetPasswordInput } from "@modules/auth/infrastructure/http/contract/forget-password";
+import type { ResetPasswordInput } from "@modules/auth/infrastructure/http/contract/forgot-password";
 import type { LoginResponse } from "@modules/auth/infrastructure/http/contract/login";
 import { PasswordService } from "@modules/auth/service/password-service";
 import { UserReadRepository } from "@modules/user/infrastructure/persistence/repository/read";
 import { UserWriteRepository } from "@modules/user/infrastructure/persistence/repository/write";
 import type { UseCaseInterface } from "@shared/application/usecase/usecase-interface";
+import { NotFoundError } from "@shared/infrastructure/error";
 import { EventDispatcher } from "@shared/infrastructure/event/event-dispatcher";
 import { JwtService } from "@shared/security/jwt-service";
 import { inject, injectable } from "tsyringe";
@@ -31,7 +32,7 @@ export class ResetPasswordUseCase implements UseCaseInterface<ResetPasswordInput
     const user = await this.userReadRepository.getUserByVerifyCode(data.code);
 
     if (!user) {
-      throw new Error("user_not_found");
+      throw new NotFoundError("invalid_code");
     }
 
     const newPassword = this.passwordService.hash(data.password);

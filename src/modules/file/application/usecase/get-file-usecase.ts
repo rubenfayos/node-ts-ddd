@@ -1,6 +1,4 @@
-import type {
-  IFileReadRepository,
-} from "@modules/file/domain/interface/repository";
+import type { IFileReadRepository } from "@modules/file/domain/interface/repository";
 import type { GetFileInput } from "@modules/file/infraestructure/http/contract/get-file.contract";
 import { FileReadRepository } from "@modules/file/infraestructure/persistence/repository/read";
 import type { UseCaseInterface } from "@shared/application/usecase/usecase-interface";
@@ -11,7 +9,6 @@ type GetFileResponse = {
   path: string;
   filename: string;
 };
-
 
 @injectable()
 export class GetFileUseCase implements UseCaseInterface<GetFileInput, GetFileResponse> {
@@ -27,6 +24,6 @@ export class GetFileUseCase implements UseCaseInterface<GetFileInput, GetFileRes
 
     if (file.getUserId() !== userId) throw new Error("Forbidden");
 
-    return {path: file.getPath(), filename: file.getFilename()};
+    return { path: file.getPath(), filename: file.getFilename() };
   }
 }

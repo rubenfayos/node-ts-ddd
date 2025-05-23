@@ -1,4 +1,4 @@
-import {DomainEvent} from "@core/domain/event/domain-event";
+import { DomainEvent } from "@core/domain/event/domain-event";
 import { User } from "@modules/user/domain/entity/user";
 
 export class UserResetPasswordEvent extends DomainEvent {
@@ -6,7 +6,11 @@ export class UserResetPasswordEvent extends DomainEvent {
   version = 0;
 
   public static create(userId: string): UserResetPasswordEvent {
-    return new UserResetPasswordEvent(userId);
+    const event = new UserResetPasswordEvent(userId);
+
+    event.stream = `user:${userId}`;
+
+    return event;
   }
 
   getRelatedFQN(): string {

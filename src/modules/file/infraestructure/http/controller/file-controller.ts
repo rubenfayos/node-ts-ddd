@@ -5,7 +5,7 @@ import { BaseController } from "@shared/infrastructure/http/utils/base-controlle
 import { type Request, type Response, Router } from "express";
 import { inject, injectable } from "tsyringe";
 import type { GetFileParams } from "../contract/get-file.contract";
-import {DeleteFileUseCase} from "@modules/file/application/usecase/delete-file-usecase";
+import { DeleteFileUseCase } from "@modules/file/application/usecase/delete-file-usecase";
 
 @injectable()
 export class FileController extends BaseController {

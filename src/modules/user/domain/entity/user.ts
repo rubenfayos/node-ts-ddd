@@ -5,7 +5,9 @@ import { UserCreated } from "../event/user-created";
 import { UserForgotPasswordEvent } from "../event/user-forgot-password-event";
 import { UserResetPasswordEvent } from "../event/user-reset-password-event";
 import { UserValidated } from "../event/user-validated";
-import {AggregateRoot} from "@core/domain/aggregate/aggregate-root";
+import { AggregateRoot } from "@core/domain/aggregate/aggregate-root";
+import { UserUpdatedEvent } from "../event/user-updated-event";
+import type { OrganizationMembership } from "@modules/organizations/domain/entity/organization-membership";
 
 export type UserProps = {
   id: string;
@@ -33,6 +35,8 @@ export class User extends AggregateRoot {
   private createdAt: Date;
   private updatedAt: Date;
   private roles: string[];
+
+  private memberships: OrganizationMembership[] = [];
 
   private constructor(props: UserProps) {
     super();
@@ -72,6 +76,26 @@ export class User extends AggregateRoot {
 
     user.registerEvent(UserCreated.create(user.id));
     return user;
+  }
+
+  update(props: Partial<UserProps>): User {
+    const changes: Partial<UserProps> = {};
+
+    if (props.name !== this.name) {
+      changes.name = props.name;
+      this.name = props.name;
+    }
+
+    if (props.phone !== this.phone) {
+      changes.phone = props.phone;
+      this.phone = props.phone;
+    }
+
+    if (Object.keys(changes).length > 0) {
+      this.registerEvent(UserUpdatedEvent.create(this.id));
+    }
+
+    return this;
   }
 
   validateAccount() {
@@ -156,5 +180,13 @@ export class User extends AggregateRoot {
 
   getRoles() {
     return this.roles;
+  }
+
+  setMemberships(memberships: OrganizationMembership[]) {
+    this.memberships = memberships;
+  }
+
+  getMemberships() {
+    return this.memberships;
   }
 }

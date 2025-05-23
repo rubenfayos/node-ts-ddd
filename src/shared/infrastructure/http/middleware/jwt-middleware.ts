@@ -21,7 +21,7 @@ export class JwtMiddleware {
     const token = authHeader.split(" ")[1];
 
     try {
-      const payload = this.jwtService.verifyToken(token);
+      const payload = this.jwtService.verifyToken(token) as { sub: string; roles: string[] };
 
       res.locals.user = {
         id: payload.sub,

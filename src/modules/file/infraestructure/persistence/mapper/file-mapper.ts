@@ -1,5 +1,5 @@
 import { File } from "@modules/file/domain/entity/file";
-import type { Prisma, File as PrismaFile } from "@prisma/client"; 
+import type { Prisma, File as PrismaFile } from "@prisma/client";
 
 export const FileMapper = {
   toPersistence(file: File): Prisma.FileCreateInput {
@@ -9,9 +9,9 @@ export const FileMapper = {
       mimetype: file.getMimetype(),
       size: file.getSize(),
       is_public: file.getIsPublic(),
-      user: {connect: {id: file.getUserId()}},
+      user: { connect: { id: file.getUserId() } },
       id: file.getId(),
-      relative_path: file.getRelativePath()
+      relative_path: file.getRelativePath(),
     };
   },
 
@@ -24,7 +24,7 @@ export const FileMapper = {
       size: raw.size,
       isPublic: raw.is_public,
       userId: raw.user_id ?? undefined,
-      relativePath: raw.relative_path
+      relativePath: raw.relative_path,
     });
   },
 };

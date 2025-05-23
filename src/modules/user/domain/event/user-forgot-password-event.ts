@@ -1,4 +1,4 @@
-import {DomainEvent} from "@core/domain/event/domain-event";
+import { DomainEvent } from "@core/domain/event/domain-event";
 import { User } from "@modules/user/domain/entity/user";
 
 export class UserForgotPasswordEvent extends DomainEvent {

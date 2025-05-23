@@ -25,6 +25,7 @@ export class EventDispatcher {
       source: event.source,
       type: event.getName(),
       userId: event.userId,
+      stream: event.stream,
       data: {},
     });
 

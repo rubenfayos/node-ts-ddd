@@ -7,7 +7,8 @@ export type APP_ENV_TYPES = "development" | "test" | "production";
 // biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 abstract class Config {
   static readonly APP_PORT = process.env.APP_PORT || 3000;
-  static readonly APP_ENV: APP_ENV_TYPES = "development";
+  static readonly NODE_ENV: APP_ENV_TYPES =
+    (process.env.NODE_ENV as APP_ENV_TYPES) || "development";
   static readonly DB_HOST = process.env.DB_HOST || "127.0.0.1";
   static readonly DB_USER = process.env.DB_USER || "postgres";
   static readonly DB_PASS = process.env.DB_PASS || "postgres";

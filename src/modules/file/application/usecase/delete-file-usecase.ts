@@ -22,8 +22,7 @@ export class DeleteFileUseCase implements UseCaseInterface<GetFileInput, void> {
     private readonly storage: LocalStorageService,
   ) {}
 
-  async execute({fileId, userId}: GetFileInput): Promise<void> {
-
+  async execute({ fileId, userId }: GetFileInput): Promise<void> {
     const file = await this.fileReadRepository.getById(fileId);
 
     if (!file) throw new Error("File not found");

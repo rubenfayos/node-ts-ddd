@@ -65,13 +65,7 @@ export class UserController extends BaseController {
     try {
       const user = await this.userGetUseCase.execute(res.locals.user.id);
 
-      // if (result.isFail()) {
-      //   return res.status(HttpStatus.NOT_FOUND).json({ error: result.error() });
-      // }
-
-      const dto = UserMapper.toResponseDTO(user);
-
-      return res.status(HttpStatus.OK).json(dto);
+      return res.status(HttpStatus.OK).json(user);
     } catch (error) {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
         error: "An error occurred while retrieving the user.",
