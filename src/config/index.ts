@@ -22,6 +22,12 @@ abstract class Config {
   static readonly RABBITMQ_USER = process.env.RABBITMQ_USER || "guest";
   static readonly RABBITMQ_PASS = process.env.RABBITMQ_PASS || "guest";
   static readonly RABBITMQ_QUEUE = process.env.RABBITMQ_QUEUE || "default_queue";
+
+  static readonly MAIL_HOST = process.env.MAIL_HOST || "mailcatcher";
+  static readonly MAIL_PORT = process.env.MAIL_PORT ? Number.parseInt(process.env.MAIL_PORT) : 1025;
+  static readonly MAIL_USER = process.env.MAIL_USER || "";
+  static readonly MAIL_PASS = process.env.MAIL_PASS || "";
+  static readonly MAIL_FROM = process.env.MAIL_FROM || "";
 }
 
 export default Config;

@@ -10,6 +10,7 @@ import type { DeleteOrganizationMembershipInput } from "../contract/organization
 import { DeleteOrganizationMembershipUseCase } from "@modules/organizations/application/usecase/delete-organization-membership-usecase";
 import { MembershipGuard } from "@modules/organizations/domain/guard/membership.guard";
 import { GetOrganizationMembershipUseCase } from "@modules/organizations/application/usecase/get-organization-membership-usecase";
+import { GetOrganizationUseCase } from "@modules/organizations/application/usecase/get-organization-use-case";
 
 @injectable()
 export class OrganizationController extends BaseController {
@@ -30,6 +31,9 @@ export class OrganizationController extends BaseController {
     @inject(DeleteOrganizationMembershipUseCase)
     private deleteOrganizationMembershipUseCase: DeleteOrganizationMembershipUseCase,
 
+    @inject(GetOrganizationUseCase)
+    private getOrganizationUseCase: GetOrganizationUseCase,
+
     @inject(MembershipGuard)
     private membershipGuard: MembershipGuard,
   ) {
@@ -39,6 +43,8 @@ export class OrganizationController extends BaseController {
 
   register(): Router {
     this.router.post("/", this.create);
+
+    this.router.get("/:organizationId", this.get);
 
     this.router.post("/:organizationId/memberships", this.createMembership);
 
@@ -77,6 +83,20 @@ export class OrganizationController extends BaseController {
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: "error_creating_organization" });
+    }
+  };
+
+  get = async (req: Request<{ organizationId: string }>, res: Response) => {
+    try {
+      const organization = await this.getOrganizationUseCase.execute({
+        organizationId: req.params.organizationId,
+        userId: res.locals.user.id,
+      });
+
+      res.status(200).json(organization);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "error_getting_organization" });
     }
   };
 

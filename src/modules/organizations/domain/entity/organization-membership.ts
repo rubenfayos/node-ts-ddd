@@ -1,5 +1,6 @@
 import { AggregateRoot } from "@core/domain/aggregate/aggregate-root";
 import crypto from "node:crypto";
+import { OrganizationMembershipCreated } from "@modules/organizations/domain/event/organization-memberhip/organization-membership-created.event";
 
 interface OrganizationMembershipProps {
   id: string;
@@ -23,10 +24,18 @@ export class OrganizationMembership extends AggregateRoot {
   }
 
   static create(props: Omit<OrganizationMembershipProps, "id">): OrganizationMembership {
-    return new OrganizationMembership({
+    const organizationMembership = new OrganizationMembership({
       ...props,
       id: crypto.randomUUID(),
     });
+
+    organizationMembership.registerEvent(
+      OrganizationMembershipCreated.create(organizationMembership.getOrganizationId(), {
+        userId: props.userId,
+      }),
+    );
+
+    return organizationMembership;
   }
 
   getId() {

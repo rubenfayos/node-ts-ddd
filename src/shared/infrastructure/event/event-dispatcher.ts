@@ -26,7 +26,7 @@ export class EventDispatcher {
       type: event.getName(),
       userId: event.userId,
       stream: event.stream,
-      data: {},
+      data: event.data,
     });
 
     const createdEvent = await this.eventWriteRepository.create(eventData, handlerNames);

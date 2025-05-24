@@ -6,6 +6,7 @@ import { OrganizationMembershipReadRepository } from "@modules/organizations/inf
 import { OrganizationMembershipWriteRepository } from "@modules/organizations/infraestructure/persistence/repository/organization-membership/write";
 import { UserReadRepository } from "@modules/user/infrastructure/persistence/repository/read";
 import type { UseCaseInterface } from "@shared/application/usecase/usecase-interface";
+import { EventDispatcher } from "@shared/infrastructure/event/event-dispatcher";
 import { inject, injectable } from "tsyringe";
 
 type CreateOrganizationMembershipUseCaseInput = CreateOrganizationMembershipInput & {
@@ -25,6 +26,9 @@ export class CreateOrganizationMembershipUseCase
 
     @inject(OrganizationMembershipWriteRepository)
     private readonly organizationMembershipWriteRepository: OrganizationMembershipWriteRepository,
+
+    @inject(EventDispatcher)
+    private readonly eventDispatcher: EventDispatcher,
   ) {}
 
   async execute(data: CreateOrganizationMembershipUseCaseInput): Promise<OrganizationMembership> {
@@ -46,6 +50,10 @@ export class CreateOrganizationMembershipUseCase
     });
 
     await this.organizationMembershipWriteRepository.create(organizationMembership);
+
+    for (const event of organizationMembership.getEvents()) {
+      this.eventDispatcher.dispatch(event);
+    }
 
     return organizationMembership;
   }

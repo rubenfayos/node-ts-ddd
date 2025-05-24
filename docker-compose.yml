@@ -9,6 +9,7 @@ services:
   #   depends_on:
   #     - db
   #     - rabbitmq
+  #     - mailcatcher
   #   environment:
   #     DATABASE_URL: "postgresql://postgres:postgres@db:5432/app"
   #     NODE_ENV: production
@@ -40,6 +41,13 @@ services:
       RABBITMQ_DEFAULT_PASS: guest
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
+
+  mailcatcher:
+    image: sj26/mailcatcher
+    container_name: express-ddd-mailcatcher
+    ports:
+      - "1080:1080"
+      - "1025:1025"
 
 volumes:
   db_data:

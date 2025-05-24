@@ -38,10 +38,6 @@ export class RegisterUserCase implements UseCaseInterface<RegisterInput, void> {
 
     await this.userWriteRepository.create(user);
 
-    // if (result.isFail()) {
-    //   return Result.fail("error_creating_user", "An error occurred while creating the user");
-    // }
-
     for (const events of user.getEvents()) {
       this.eventDispatcher.dispatch(events);
     }

@@ -63,6 +63,7 @@ export class User extends AggregateRoot {
     const userData: UserProps = {
       id: crypto.randomUUID().toString(),
       email: props.email,
+      name: props.name,
       password: props.password,
       phone: props.phone ?? null,
       verifyCode: CodeGenerator.generateAlphanumericCode(),

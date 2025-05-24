@@ -3,21 +3,11 @@ import path from "node:path";
 import type { TemplateRenderer } from "@core/domain/template-renderer";
 import { injectable } from "tsyringe";
 import { renderFile } from "twig";
+import glob from "glob";
 
 @injectable()
 export class TwigTemplateRenderer implements TemplateRenderer {
-  static readonly TEMPLATES_PATH = path.join(
-    __dirname,
-    "..",
-    "..",
-    "..",
-    "modules",
-    "**",
-    "infraestructure",
-    "persistence",
-    "mapper",
-    "templates",
-  );
+  static readonly TEMPLATES_PATH = path.join(__dirname, "..", "..", "..", "..", "templates");
 
   async render(templateName: string, variables: Record<string, unknown>): Promise<string> {
     const filePath = path.join(TwigTemplateRenderer.TEMPLATES_PATH, `${templateName}.twig`);

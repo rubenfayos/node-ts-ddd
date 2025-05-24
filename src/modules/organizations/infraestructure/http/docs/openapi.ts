@@ -26,6 +26,23 @@ registry.registerPath({
 });
 
 registry.registerPath({
+  method: "get",
+  path: "/v1/organizations/{organizationId}",
+  summary: "Get organization",
+  tags: ["Organizations"],
+  request: {
+    params: z.object({
+      organizationId: z.string(),
+    }),
+  },
+  responses: {
+    200: {
+      description: "Organization",
+    },
+  },
+});
+
+registry.registerPath({
   method: "post",
   path: "/v1/organizations/{organizationId}/memberships",
   summary: "Create an organization membership",

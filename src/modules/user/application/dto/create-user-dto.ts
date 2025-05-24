@@ -7,6 +7,7 @@ export const CreateUserDTOSchema = UserAttributesSchema.pick({
   email: true,
   phone: true,
   password: true,
+  name: true,
   //   credentialUuid: true,
 }).openapi("CreateUserDTO");
 

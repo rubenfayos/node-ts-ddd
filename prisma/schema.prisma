@@ -118,3 +118,14 @@ model OrganizationMembership {
 
   @@map("organizations_organization_membership")
 }
+
+model Mail {
+  id        String   @id @default(uuid())
+  from      String
+  to        String
+  subject   String
+  body      String
+  created_at DateTime @default(now())
+
+  @@map("core_mails")
+}

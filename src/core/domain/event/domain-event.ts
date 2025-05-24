@@ -6,6 +6,7 @@ export abstract class DomainEvent {
   public userId?: string;
   public source?: string;
   public stream?: string;
+  public data: object = {};
 
   constructor(relatedId: string, occurredAt?: Date) {
     this.relatedId = relatedId;
