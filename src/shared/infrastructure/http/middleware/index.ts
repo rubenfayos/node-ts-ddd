@@ -6,6 +6,7 @@ import logger from "./logger";
 import securityMiddleware from "./security";
 
 import type { Application, NextFunction, Request, Response } from "express";
+import sentry from "@shared/infrastructure/external/sentry/middlewares/sentry";
 import express from "express";
 
 const registerApplicationMiddlewares = async (app: Application) => {
@@ -20,6 +21,8 @@ const registerApplicationMiddlewares = async (app: Application) => {
 
   // CORS
   app.use(corsMiddleware);
+
+  app.use(sentry);
 
   // Logging middleware
   app.use(logger);

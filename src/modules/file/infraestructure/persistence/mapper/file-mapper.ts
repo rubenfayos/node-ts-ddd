@@ -9,7 +9,7 @@ export const FileMapper = {
       mimetype: file.getMimetype(),
       size: file.getSize(),
       is_public: file.getIsPublic(),
-      user: { connect: { id: file.getUserId() } },
+      user: file.getUserId() ? { connect: { id: file.getUserId() } } : undefined,
       id: file.getId(),
       relative_path: file.getRelativePath(),
     };

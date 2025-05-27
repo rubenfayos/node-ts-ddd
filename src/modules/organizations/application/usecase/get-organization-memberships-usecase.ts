@@ -4,6 +4,7 @@ import { UserReadRepository } from "@modules/user/infrastructure/persistence/rep
 import type { UseCaseInterface } from "@shared/application/usecase/usecase-interface";
 import { inject, injectable } from "tsyringe";
 import type { OrganizationMembershipDto } from "../dto/organization-membership-dto";
+import type { PaginatedResult } from "@shared/common/utils/prisma-utils";
 
 type GetOrganizationMembershipsUseCaseInput = {
   organizationId: string;
@@ -12,7 +13,11 @@ type GetOrganizationMembershipsUseCaseInput = {
 
 @injectable()
 export class GetOrganizationMembershipsUseCase
-  implements UseCaseInterface<GetOrganizationMembershipsUseCaseInput, OrganizationMembershipDto[]>
+  implements
+    UseCaseInterface<
+      GetOrganizationMembershipsUseCaseInput,
+      PaginatedResult<OrganizationMembershipDto>
+    >
 {
   constructor(
     @inject(OrganizationMembershipReadRepository)
@@ -24,15 +29,15 @@ export class GetOrganizationMembershipsUseCase
 
   async execute(
     data: GetOrganizationMembershipsUseCaseInput,
-  ): Promise<OrganizationMembershipDto[]> {
+  ): Promise<PaginatedResult<OrganizationMembershipDto>> {
     const memberships = await this.organizationMembershipReadRepository.getByOrganization(
       data.organizationId,
-      data.query,
+      { where: data.query },
     );
 
     const dtos: OrganizationMembershipDto[] = [];
 
-    for (const membership of memberships) {
+    for (const membership of memberships.items) {
       const user = await this.userReadRepository.getByUserId(membership.getUserId());
 
       if (!user) throw new Error("User not found");
@@ -49,6 +54,6 @@ export class GetOrganizationMembershipsUseCase
       dtos.push(dto);
     }
 
-    return dtos;
+    return { ...memberships, items: dtos };
   }
 }

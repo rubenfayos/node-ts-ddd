@@ -48,7 +48,7 @@ export class OrganizationController extends BaseController {
 
     this.router.post("/:organizationId/memberships", this.createMembership);
 
-    this.router.use("/:organizationId", this.checkAccess(["admin"]));
+    this.router.use("/:organizationId", this.checkAccess(["owner", "admin"]));
 
     this.router.get("/:organizationId/memberships", this.getMemberships);
 

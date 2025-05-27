@@ -18,11 +18,14 @@ abstract class Config {
   static readonly SENTRY_DSN = process.env.SENTRY_DSN || "";
   static readonly JWT_SECRET = process.env.JWT_SECRET || "";
   static readonly JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "1h";
+
+  // RabbitMQ
   static readonly RABBITMQ_URL = process.env.RABBITMQ_URL || "amqp://localhost";
   static readonly RABBITMQ_USER = process.env.RABBITMQ_USER || "guest";
   static readonly RABBITMQ_PASS = process.env.RABBITMQ_PASS || "guest";
   static readonly RABBITMQ_QUEUE = process.env.RABBITMQ_QUEUE || "default_queue";
 
+  // Mail
   static readonly MAIL_HOST = process.env.MAIL_HOST || "mailcatcher";
   static readonly MAIL_PORT = process.env.MAIL_PORT ? Number.parseInt(process.env.MAIL_PORT) : 1025;
   static readonly MAIL_USER = process.env.MAIL_USER || "";

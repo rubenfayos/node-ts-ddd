@@ -4,8 +4,16 @@ import { PrismaService } from "@shared/infrastructure/persistence/prisma/prisma-
 import { inject, singleton } from "tsyringe";
 import { OrganizationMembershipMapper } from "@modules/organizations/infraestructure/persistence/mappers/organization-membership-mapper";
 import type { Prisma } from "@prisma/client";
+import { buildQuery, type PaginatedResult } from "@shared/common/utils/prisma-utils";
 
 type MembershipFilter = Prisma.OrganizationMembershipWhereInput;
+
+export type MembershipQueryParams = {
+  where?: MembershipFilter;
+  orderBy?: Prisma.OrganizationMembershipOrderByWithRelationInput;
+  page?: number;
+  pageSize?: number;
+};
 
 @singleton()
 export class OrganizationMembershipReadRepository implements IMembershipReadRepository {
@@ -35,20 +43,34 @@ export class OrganizationMembershipReadRepository implements IMembershipReadRepo
 
   async getByOrganization(
     organizationId: string,
-    query: Record<string, string>,
-  ): Promise<OrganizationMembership[]> {
+    params: MembershipQueryParams = {},
+  ): Promise<PaginatedResult<OrganizationMembership>> {
     const where: MembershipFilter = {
-      organization_id: organizationId, // or organization_id depending on your schema
+      organization_id: organizationId,
+      ...(params.where ?? {}),
     };
 
-    if (query.role) {
-      where.role = query.role;
-    }
-
-    const memberships = await this.db.client.organizationMembership.findMany({
+    const query = buildQuery<
+      Prisma.OrganizationMembershipWhereInput,
+      Prisma.OrganizationMembershipOrderByWithRelationInput
+    >({
+      ...params,
       where,
     });
 
-    return memberships.map(OrganizationMembershipMapper.toDomain);
+    const [items, total] = await Promise.all([
+      this.db.client.organizationMembership.findMany(query),
+      this.db.client.organizationMembership.count({
+        where: query.where,
+      }),
+    ]);
+
+    return {
+      items: items.map(OrganizationMembershipMapper.toDomain),
+      total,
+      page: params.page || 1,
+      pageSize: params.pageSize || 10,
+      totalPages: Math.ceil(total / (params.pageSize || 10)),
+    };
   }
 }

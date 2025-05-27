@@ -3,7 +3,7 @@ import type { User as PrismaUser } from "@prisma/client";
 
 export const UserMapper = {
   toDomain(raw: PrismaUser): User {
-    return User.create({
+    return new User({
       createdAt: raw.created_at,
       updatedAt: raw.updated_at,
       id: raw.id,
@@ -14,7 +14,7 @@ export const UserMapper = {
       verified: raw.verified,
       verifiedAt: raw.verified_at ?? undefined,
       verifyCode: raw.verify_code ?? undefined,
-      roles: [],
+      roles: raw.roles,
     });
   },
 

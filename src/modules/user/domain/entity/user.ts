@@ -38,7 +38,7 @@ export class User extends AggregateRoot {
 
   private memberships: OrganizationMembership[] = [];
 
-  private constructor(props: UserProps) {
+  constructor(props: UserProps) {
     super();
     this.id = props.id;
     this.email = props.email;

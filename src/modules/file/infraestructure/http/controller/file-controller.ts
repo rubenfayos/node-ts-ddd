@@ -15,11 +15,6 @@ export class FileController extends BaseController {
     @inject(UploadFileUseCase) private uploadFileUseCase: UploadFileUseCase,
     @inject(GetFileUseCase) private getFileUseCase: GetFileUseCase,
     @inject(DeleteFileUseCase) private deleteFileUseCase: DeleteFileUseCase,
-    // @inject(LoginUserCase) private loginUseCase: LoginUserCase,
-    // @inject(RegisterUserCase) private registerUseCase: RegisterUserCase,
-    // @inject(VerifyEmailUseCase) private verifyEmailUseCase: VerifyEmailUseCase,
-    // @inject(ForgetPasswordUseCase) private forgetPasswordUseCase: ForgetPasswordUseCase,
-    // @inject(ResetPasswordUseCase) private resetPasswordUseCase: ResetPasswordUseCase,
   ) {
     super();
     this.router = Router();

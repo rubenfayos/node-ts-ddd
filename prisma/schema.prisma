@@ -30,6 +30,7 @@ model User {
   OrganizationMembership OrganizationMembership[]
 
   @@map("core_users")
+  Ticket Ticket[]
 }
 
 model Event {
@@ -128,4 +129,18 @@ model Mail {
   created_at DateTime @default(now())
 
   @@map("core_mails")
+}
+
+model Ticket {
+  id        String   @id @default(uuid())
+  title     String
+  description String
+  priority  String
+  created_at DateTime @default(now())
+  attachments String[]
+
+  user_id    String?
+  user         User?         @relation(fields: [user_id], references: [id])
+
+  @@map("customer_service_tickets")
 }

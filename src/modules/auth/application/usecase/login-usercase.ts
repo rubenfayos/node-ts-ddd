@@ -32,6 +32,8 @@ export class LoginUserCase implements UseCaseInterface<LoginInput, LoginResponse
       throw new UnauthorizedError("invalid_credentials");
     }
 
+    console.log(user);
+
     const token = this.jwtService.generateToken(
       { email: user.getEmail(), roles: user.getRoles() },
       user.getId(),

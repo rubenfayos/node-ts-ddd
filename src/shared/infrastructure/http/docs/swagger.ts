@@ -5,6 +5,7 @@ import "@modules/user/infrastructure/http/docs/openapi";
 import "@modules/auth/infrastructure/http/docs/openapi";
 import "@modules/file/infraestructure/http/docs/open-api";
 import "@modules/organizations/infraestructure/http/docs/openapi";
+import "@modules/customer-service/infraestructure/http/docs/openapi";
 
 const generator = new OpenApiGeneratorV3(registry.definitions);
 
