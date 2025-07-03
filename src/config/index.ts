@@ -4,9 +4,11 @@ dotenv.config();
 
 export type APP_ENV_TYPES = "development" | "test" | "production";
 
+// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 abstract class Config {
   static readonly APP_PORT = process.env.APP_PORT || 3000;
-  static readonly APP_ENV: APP_ENV_TYPES = "development";
+  static readonly NODE_ENV: APP_ENV_TYPES =
+    (process.env.NODE_ENV as APP_ENV_TYPES) || "development";
   static readonly DB_HOST = process.env.DB_HOST || "127.0.0.1";
   static readonly DB_USER = process.env.DB_USER || "postgres";
   static readonly DB_PASS = process.env.DB_PASS || "postgres";
@@ -16,6 +18,19 @@ abstract class Config {
   static readonly SENTRY_DSN = process.env.SENTRY_DSN || "";
   static readonly JWT_SECRET = process.env.JWT_SECRET || "";
   static readonly JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "1h";
+
+  // RabbitMQ
+  static readonly RABBITMQ_URL = process.env.RABBITMQ_URL || "amqp://localhost";
+  static readonly RABBITMQ_USER = process.env.RABBITMQ_USER || "guest";
+  static readonly RABBITMQ_PASS = process.env.RABBITMQ_PASS || "guest";
+  static readonly RABBITMQ_QUEUE = process.env.RABBITMQ_QUEUE || "default_queue";
+
+  // Mail
+  static readonly MAIL_HOST = process.env.MAIL_HOST || "mailcatcher";
+  static readonly MAIL_PORT = process.env.MAIL_PORT ? Number.parseInt(process.env.MAIL_PORT) : 1025;
+  static readonly MAIL_USER = process.env.MAIL_USER || "";
+  static readonly MAIL_PASS = process.env.MAIL_PASS || "";
+  static readonly MAIL_FROM = process.env.MAIL_FROM || "";
 }
 
 export default Config;

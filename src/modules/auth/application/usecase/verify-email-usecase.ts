@@ -1,16 +1,16 @@
-import type { LoginResponse } from "@modules/auth/infraestructure/http/contract/login";
-import type { VerifyEmailInput } from "@modules/auth/infraestructure/http/contract/verify-email";
-import { UserReadRepository } from "@modules/user/infraestructure/persistence/repository/read";
-import { UserWriteRepository } from "@modules/user/infraestructure/persistence/repository/write";
-import { EventDispatcher } from "@shared/infraestructure/event/domain-event.dispatcher";
+import type { LoginResponse } from "@modules/auth/infrastructure/http/contract/login";
+import type { VerifyEmailInput } from "@modules/auth/infrastructure/http/contract/verify-email";
+import { UserReadRepository } from "@modules/user/infrastructure/persistence/repository/read";
+import { UserWriteRepository } from "@modules/user/infrastructure/persistence/repository/write";
+import type { UseCaseInterface } from "@shared/application/usecase/usecase-interface";
+import { NotFoundError, ValidationError } from "@shared/infrastructure/error";
+import { ConflictError } from "@shared/infrastructure/error/conflict";
+import { EventDispatcher } from "@shared/infrastructure/event/event-dispatcher";
 import { JwtService } from "@shared/security/jwt-service";
 import { inject, injectable } from "tsyringe";
-import { type IUseCase, Result } from "types-ddd";
 
 @injectable()
-export class VerifyEmailUseCase
-  implements IUseCase<VerifyEmailInput, Result<LoginResponse, string>>
-{
+export class VerifyEmailUseCase implements UseCaseInterface<VerifyEmailInput, LoginResponse> {
   constructor(
     @inject(UserReadRepository)
     private userReadRepository: UserReadRepository,
@@ -25,32 +25,36 @@ export class VerifyEmailUseCase
     private eventDispatcher: EventDispatcher,
   ) {}
 
-  async execute(data: VerifyEmailInput): Promise<Result<LoginResponse, string>> {
+  async execute(data: VerifyEmailInput): Promise<LoginResponse> {
     const user = await this.userReadRepository.getUserByEmail(data.email);
 
-    if (!user) return Result.fail("user_not_found", "User not found");
+    if (!user) {
+      throw new NotFoundError("user_not_found");
+    }
 
     if (user.getVerified()) {
-      return Result.fail("already_verified", "User already verified");
+      throw new ConflictError("already_verified");
     }
 
     if (user.getVerifyCode() !== data.code) {
-      return Result.fail("invalid_code", "Invalid code");
+      throw new ValidationError("invalid_code");
     }
 
     user.validateAccount();
 
     await this.userWriteRepository.update(user);
 
-    const token = this.jwtService.generateToken({ email: user.getEmail() }, user.getId().value());
+    const token = this.jwtService.generateToken({ email: user.getEmail() }, user.getId());
 
-    this.eventDispatcher.dispatchEvents(user);
+    for (const events of user.getEvents()) {
+      this.eventDispatcher.dispatch(events);
+    }
 
     const userObject = user.toSafeObject();
 
-    return Result.Ok({
+    return {
       token,
       user: userObject,
-    });
+    };
   }
 }

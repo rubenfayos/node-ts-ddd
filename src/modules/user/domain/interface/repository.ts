@@ -1,5 +1,4 @@
 import type { User } from "@modules/user/domain/entity/user";
-import type { Result } from "types-ddd";
 
 export interface IUserReadRepository {
   getAll(): Promise<User[]>;
@@ -10,7 +9,7 @@ export interface IUserReadRepository {
 }
 
 export interface IUserCreateRepository {
-  create(user: User): Promise<Result<User>>;
+  create(user: User): Promise<User>;
 }
 
 export interface IUserWriteRepository extends IUserCreateRepository {}

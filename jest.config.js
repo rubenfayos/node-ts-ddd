@@ -7,6 +7,7 @@ module.exports = {
   moduleNameMapper: {
     "^@modules/(.*)$": "<rootDir>/src/modules/$1",
     "^@shared/(.*)$": "<rootDir>/src/shared/$1",
+    "^@core/(.*)$": "<rootDir>/src/core/$1",
     "^@config$": "<rootDir>/src/config/index.ts",
   },
   setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"], // optional

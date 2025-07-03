@@ -1,4 +1,4 @@
-import { registry } from "@shared/infraestructure/http/docs/openapi-registry";
+import { registry } from "@shared/infrastructure/http/docs/openapi-registry";
 import { z } from "zod";
 
 export const UserAttributesSchema = z

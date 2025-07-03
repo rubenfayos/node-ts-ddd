@@ -1,27 +1,23 @@
+import { DomainEvent } from "@core/domain/event/domain-event";
 import { User } from "@modules/user/domain/entity/user";
-import { DomainEvent } from "@shared/domain/event/domain-event";
 
-export class UserCreated extends DomainEvent<User> {
-  static readonly NAME = "core.user_created";
-  $names = UserCreated.NAME;
-  $version = 0;
+export class UserCreated extends DomainEvent {
+  static readonly EVENT_NAME = "user.created";
+  version = 0;
 
-  constructor(
-    userId: string,
-    public readonly email: string,
-  ) {
-    super(userId, {
-      userId,
-      source: "UserService",
-    });
+  public static create(userId: string): UserCreated {
+    const event = new UserCreated(userId);
+
+    event.stream = `user:${userId}`;
+
+    return event;
   }
 
-  async handle(aggregate: User) {
-    const model = aggregate.toObject();
-    console.log("User Added", model);
-  }
-
-  getRelatedFQN(): string {
+  public getRelatedFQN(): string {
     return User.name;
+  }
+
+  public getName(): string {
+    return UserCreated.EVENT_NAME;
   }
 }

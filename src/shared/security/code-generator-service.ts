@@ -1,5 +1,6 @@
 import crypto from "node:crypto";
 
+// biome-ignore lint/complexity/noStaticOnlyClass: <explanation>
 export class CodeGenerator {
   static generateNumericCode(length = 8): string {
     const digits = "0123456789";
